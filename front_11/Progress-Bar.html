@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Асинхронный прогресс-бар</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background: #f0f0f0;
+            border-radius: 25px;
+            height: 30px;
+            margin: 30px 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #progress-bar {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 0%;
+            border-radius: 25px;
+            transition: width 0.5s ease, background-color 0.3s ease;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        .status {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            min-height: 30px;
+        }
+
+        .status.success {
+            color: #4CAF50;
+        }
+
+        .status.error {
+            color: #f44336;
+        }
+
+        .status.processing {
+            color: #2196F3;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .details h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .details li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .details li:last-child {
+            border-bottom: none;
+        }
+
+        .time-display {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .progress-stripes {
+            background-image: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.15) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.15) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 1rem 1rem;
+            animation: progress-stripes 1s linear infinite;
+        }
+
+        @keyframes progress-stripes {
+            from {
+                background-position: 1rem 0;
+            }
+            to {
+                background-position: 0 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Асинхронный Прогресс-бар</h1>
+        <p class="subtitle">Демонстрация выполнения асинхронной задачи с визуальным отображением прогресса</p>
+        
+        <div class="progress-container">
+            <div id="progress-bar">
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+        </div>
+        
+        <div class="status" id="status">Готов к запуску...</div>
+        
+        <div class="time-display" id="time-display"></div>
+        
+        <div class="controls">
+            <button id="start-btn" onclick="startProgress()">🚀 Запустить задачу</button>
+            <button id="reset-btn" onclick="resetProgress()" disabled>🔄 Сбросить</button>
+        </div>
+        
+        <div class="details">
+            <h3>📊 Информация о задаче:</h3>
+            <ul>
+                <li>⏱️ Длительность: 5 секунд</li>
+                <li>📈 Обновление: каждую секунду (20% за шаг)</li>
+                <li>🎯 Цель: Демонстрация асинхронного выполнения</li>
+                <li>🛠️ Технологии: JavaScript, Async/Await, CSS анимации</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const statusElement = document.getElementById('status');
+        const timeDisplay = document.getElementById('time-display');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // Переменные состояния
+        let progress = 0;
+        let isRunning = false;
+        let startTime = null;
+        let animationFrame = null;
+
+        /**
+         * Функция задержки (аналог setTimeout, но возвращает Promise)
+         * @param {number} ms - время задержки в миллисекундах
+         * @returns {Promise} - Promise, который разрешится после задержки
+         */
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /**
+         * Обновление отображения прогресса
+         * @param {number} percentage - процент выполнения (0-100)
+         */
+        function updateProgress(percentage) {
+            progress = percentage;
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}%`;
+            
+            // Динамическое изменение цвета в зависимости от прогресса
+            if (percentage < 30) {
+                progressBar.style.background = 'linear-gradient(90deg, #ff6b6b, #ee5a52)';
+            } else if (percentage < 70) {
+                progressBar.style.background = 'linear-gradient(90deg, #ffa726, #ff9800)';
+            } else {
+                progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+            }
+            
+            // Добавляем анимацию полос при выполнении
+            if (percentage > 0 && percentage < 100) {
+                progressBar.classList.add('progress-stripes');
+            } else {
+                progressBar.classList.remove('progress-stripes');
+            }
+        }
+
+        /**
+         * Обновление отображения времени
+         */
+        function updateTimeDisplay() {
+            if (!startTime) return;
+            
+            const currentTime = new Date();
+            const elapsed = Math.floor((currentTime - startTime) / 1000);
+            timeDisplay.textContent = `⏰ Прошло времени: ${elapsed} секунд`;
+        }
+
+        /**
+         * Основная асинхронная функция выполнения задачи
+         */
+        async function executeTask() {
+            isRunning = true;
+            startTime = new Date();
+            startBtn.disabled = true;
+            resetBtn.disabled = true;
+            
+            statusElement.textContent = '🔄 Задача выполняется...';
+            statusElement.className = 'status processing';
+            
+            try {
+                // Имитация сложной асинхронной задачи
+                for (let i = 1; i <= 5; i++) {
+                    // Обновляем прогресс каждую секунду
+                    await delay(1000);
+                    
+                    // Увеличиваем прогресс на 20% каждый шаг
+                    const newProgress = i * 20;
+                    updateProgress(newProgress);
+                    
+                    // Обновляем статус в зависимости от этапа
+                    switch(i) {
+                        case 1:
+                            statusElement.textContent = '📥 Загрузка данных...';
+                            break;
+                        case 2:
+                            statusElement.textContent = '⚙️ Обработка информации...';
+                            break;
+                        case 3:
+                            statusElement.textContent = '🔍 Анализ результатов...';
+                            break;
+                        case 4:
+                            statusElement.textContent = '💾 Сохранение данных...';
+                            break;
+                        case 5:
+                            statusElement.textContent = '✅ Завершение...';
+                            break;
+                    }
+                    
+                    updateTimeDisplay();
+                }
+                
+                // Задача завершена успешно
+                statusElement.textContent = '🎉 Готово! Задача успешно выполнена!';
+                statusElement.className = 'status success';
+                
+                // Добавляем небольшую анимацию завершения
+                progressBar.style.background = 'linear-gradient(90deg, #00b09b, #96c93d)';
+                
+            } catch (error) {
+                // Обработка ошибок
+                statusElement.textContent = '❌ Ошибка выполнения задачи!';
+                statusElement.className = 'status error';
+                console.error('Ошибка:', error);
+            } finally {
+                // Завершаем выполнение
+                isRunning = false;
+                startBtn.disabled = false;
+                resetBtn.disabled = false;
+                
+                // Останавливаем обновление времени
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                }
+            }
+        }
+
+        /**
+         * Запуск прогресса
+         */
+        function startProgress() {
+            if (isRunning) return;
+            
+            // Сбрасываем прогресс перед запуском
+            updateProgress(0);
+            timeDisplay.textContent = '';
+            
+            // Запускаем задачу
+            executeTask();
+            
+            // Запускаем обновление времени
+            function updateTime() {
+                updateTimeDisplay();
+                if (isRunning) {
+                    animationFrame = requestAnimationFrame(updateTime);
+                }
+            }
+            updateTime();
+        }
+
+        /**
+         * Сброс прогресса
+         */
+        function resetProgress() {
+            if (isRunning) return;
+            
+            updateProgress(0);
+            statusElement.textContent = 'Готов к запуску...';
+            statusElement.className = 'status';
+            timeDisplay.textContent = '';
+            progressBar.classList.remove('progress-stripes');
+        }
+
+        /**
+         * Дополнительная функция: имитация задачи с случайной длительностью
+         */
+        async function startRandomTask() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            startTime = new Date();
+            startBtn.disabled = true;
+            resetBtn.disabled = true;
+            
+            statusElement.textContent = '🎲 Запуск случайной задачи...';
+            statusElement.className = 'status processing';
+            
+            const randomDuration = Math.floor(Math.random() * 8) + 3; // 3-10 секунд
+            const steps = randomDuration;
+            const stepDuration = 1000; // 1 секунда на шаг
+            
+            try {
+                for (let i = 1; i <= steps; i++) {
+                    await delay(stepDuration);
+                    const newProgress = Math.min((i / steps) * 100, 100);
+                    updateProgress(newProgress);
+                    statusElement.textContent = `🎲 Выполнение... (${i}/${steps} шагов)`;
+                    updateTimeDisplay();
+                }
+                
+                statusElement.textContent = '🎉 Случайная задача завершена!';
+                statusElement.className = 'status success';
+                
+            } catch (error) {
+                statusElement.textContent = '❌ Ошибка в случайной задаче!';
+                statusElement.className = 'status error';
+            } finally {
+                isRunning = false;
+                startBtn.disabled = false;
+                resetBtn.disabled = false;
+            }
+        }
+
+        // Добавляем обработчик для демонстрации случайной задачи (по двойному клику)
+        startBtn.addEventListener('dblclick', startRandomTask);
+
+        // Инициализация
+        updateProgress(0);
+        console.log('🚀 Прогресс-бар инициализирован. Готов к работе!');
+    </script>
+</body>
+</html>
