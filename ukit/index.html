@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Kit - Документация</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar__container">
+            <div class="navbar__brand">
+                <h1>UI Kit</h1>
+            </div>
+            <nav class="navbar__nav">
+                <ul class="navbar__list">
+                    <li class="navbar__item"><a href="#buttons" class="navbar__link">Кнопки</a></li>
+                    <li class="navbar__item"><a href="#inputs" class="navbar__link">Поля ввода</a></li>
+                    <li class="navbar__item"><a href="#dropdowns" class="navbar__link">Выпадающие списки</a></li>
+                    <li class="navbar__item"><a href="#checkboxes" class="navbar__link">Чекбоксы</a></li>
+                    <li class="navbar__item"><a href="#cards" class="navbar__link">Карточки</a></li>
+                </ul>
+                <div class="navbar__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section" id="intro">
+            <h2 class="section__title">Документация UI Kit</h2>
+            <p class="section__text">Этот UI Kit содержит все необходимые компоненты для вашего проекта, созданные с использованием методологии БЭМ и полностью адаптивные.</p>
+        </section>
+
+        <section class="section" id="buttons">
+            <h2 class="section__title">Кнопки</h2>
+            <p class="section__text">Кнопки доступны в трех вариантах: Primary, Secondary и Disabled, а также в трех размерах: small, medium и large.</p>
+            
+            <div class="grid">
+                <div class="grid__item">
+                    <h3>Primary кнопки</h3>
+                    <button class="btn btn--primary btn--small">Small</button>
+                    <button class="btn btn--primary btn--medium">Medium</button>
+                    <button class="btn btn--primary btn--large">Large</button>
+                </div>
+                <div class="grid__item">
+                    <h3>Secondary кнопки</h3>
+                    <button class="btn btn--secondary btn--small">Small</button>
+                    <button class="btn btn--secondary btn--medium">Medium</button>
+                    <button class="btn btn--secondary btn--large">Large</button>
+                </div>
+                <div class="grid__item">
+                    <h3>Disabled кнопки</h3>
+                    <button class="btn btn--disabled btn--small" disabled>Small</button>
+                    <button class="btn btn--disabled btn--medium" disabled>Medium</button>
+                    <button class="btn btn--disabled btn--large" disabled>Large</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="inputs">
+            <h2 class="section__title">Поля ввода</h2>
+            <p class="section__text">Поля ввода поддерживают состояния: Normal, Focus и Error. Также можно добавить иконки.</p>
+            
+            <div class="grid">
+                <div class="grid__item">
+                    <h3>Обычное поле</h3>
+                    <div class="input-group">
+                        <input type="text" class="input" placeholder="Введите текст">
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <h3>Поле с фокусом</h3>
+                    <div class="input-group">
+                        <input type="text" class="input input--focus" placeholder="Сфокусированное поле">
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <h3>Поле с ошибкой</h3>
+                    <div class="input-group">
+                        <input type="text" class="input input--error" placeholder="Поле с ошибкой">
+                        <span class="input__error-message">Обязательное поле</span>
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <h3>Поле с иконкой</h3>
+                    <div class="input-group input-group--icon">
+                        <span class="input__icon">🔍</span>
+                        <input type="text" class="input" placeholder="Поиск...">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="dropdowns">
+            <h2 class="section__title">Выпадающие списки</h2>
+            <p class="section__text">Выпадающие списки позволяют пользователям выбирать из списка опций.</p>
+            
+            <div class="grid">
+                <div class="grid__item">
+                    <div class="dropdown">
+                        <button class="dropdown__toggle">Выберите опцию</button>
+                        <ul class="dropdown__menu">
+                            <li class="dropdown__item">Опция 1</li>
+                            <li class="dropdown__item">Опция 2</li>
+                            <li class="dropdown__item">Опция 3</li>
+                            <li class="dropdown__item">Опция 4</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="checkboxes">
+            <h2 class="section__title">Чекбоксы и радиокнопки</h2>
+            <p class="section__text">Элементы форм для выбора одного или нескольких вариантов.</p>
+            
+            <div class="grid">
+                <div class="grid__item">
+                    <h3>Чекбоксы</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" class="checkbox__input">
+                            <span class="checkbox__checkmark"></span>
+                            Опция 1
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" class="checkbox__input" checked>
+                            <span class="checkbox__checkmark"></span>
+                            Опция 2
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" class="checkbox__input">
+                            <span class="checkbox__checkmark"></span>
+                            Опция 3
+                        </label>
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <h3>Радиокнопки</h3>
+                    <div class="radio-group">
+                        <label class="radio">
+                            <input type="radio" name="radio-group" class="radio__input">
+                            <span class="radio__checkmark"></span>
+                            Вариант 1
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="radio-group" class="radio__input" checked>
+                            <span class="radio__checkmark"></span>
+                            Вариант 2
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="radio-group" class="radio__input">
+                            <span class="radio__checkmark"></span>
+                            Вариант 3
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="cards">
+            <h2 class="section__title">Карточки</h2>
+            <p class="section__text">Карточки для отображения контента с различными размерами и возможностью отображения изображений.</p>
+            
+            <div class="grid">
+                <div class="grid__item">
+                    <div class="card card--small">
+                        <div class="card__image">
+                            <img src="https://via.placeholder.com/300x150" alt="Пример изображения">
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title">Маленькая карточка</h3>
+                            <p class="card__text">Это пример маленькой карточки с изображением.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <div class="card card--medium">
+                        <div class="card__image">
+                            <img src="https://via.placeholder.com/300x150" alt="Пример изображения">
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title">Средняя карточка</h3>
+                            <p class="card__text">Это пример средней карточки с изображением и более подробным текстом.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <div class="card card--large">
+                        <div class="card__image">
+                            <img src="https://via.placeholder.com/300x150" alt="Пример изображения">
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title">Большая карточка</h3>
+                            <p class="card__text">Это пример большой карточки с изображением и максимальным количеством текста для демонстрации возможностей компонента.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid__item">
+                    <div class="card card--medium card--no-image">
+                        <div class="card__content">
+                            <h3 class="card__title">Карточка без изображения</h3>
+                            <p class="card__text">Это пример карточки без изображения, только с текстовым содержимым.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>UI Kit &copy; 2023</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+// Цвета
+$color-primary: #3498db;
+$color-primary-dark: #2980b9;
+$color-secondary: #95a5a6;
+$color-secondary-dark: #7f8c8d;
+$color-success: #2ecc71;
+$color-error: #e74c3c;
+$color-warning: #f39c12;
+$color-text: #2c3e50;
+$color-text-light: #7f8c8d;
+$color-background: #ecf0f1;
+$color-border: #bdc3c7;
+$color-white: #ffffff;
+
+// Шрифты
+$font-family: 'Arial', sans-serif;
+$font-size-small: 0.875rem;
+$font-size-medium: 1rem;
+$font-size-large: 1.125rem;
+
+// Размеры
+$border-radius: 4px;
+$border-radius-large: 8px;
+
+// Отступы
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+// Тени
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+// Breakpoints
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
