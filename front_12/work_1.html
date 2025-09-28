@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input.error {
+            border-color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .error-message-general {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .demo-credentials {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Страница авторизации -->
+    <div class="container" id="login-page">
+        <h1>🔐 Вход в систему</h1>
+        
+        <div class="demo-credentials">
+            <strong>Демо доступ:</strong><br>
+            Email: demo@example.com<br>
+            Пароль: 123456
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Электронная почта:</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="email-error">Введите корректный email адрес</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required minlength="6">
+                <div class="error-message" id="password-error">Пароль должен содержать не менее 6 символов</div>
+            </div>
+
+            <button type="submit" class="btn" id="login-btn">Войти</button>
+        </form>
+
+        <div class="loading hidden" id="loading">Выполняется вход...</div>
+        <div class="error-message-general hidden" id="login-error"></div>
+    </div>
+
+    <!-- Страница dashboard -->
+    <div class="container hidden" id="dashboard-page">
+        <div class="dashboard">
+            <h1>🎉 Добро пожаловать!</h1>
+            <div class="user-info">
+                <h3>Информация о пользователе</h3>
+                <p id="user-email"></p>
+                <p>Статус: <span id="user-status">Авторизован</span></p>
+                <p id="token-info"></p>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация API
+        const API_BASE_URL = 'https://jsonplaceholder.typicode.com'; // Демо API
+        const TOKEN_KEY = 'auth_token';
+        const USER_KEY = 'user_data';
+
+        // Элементы DOM
+        const loginPage = document.getElementById('login-page');
+        const dashboardPage = document.getElementById('dashboard-page');
+        const loginForm = document.getElementById('login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        const loginBtn = document.getElementById('login-btn');
+        const loading = document.getElementById('loading');
+        const loginError = document.getElementById('login-error');
+        const userEmail = document.getElementById('user-email');
+        const tokenInfo = document.getElementById('token-info');
+
+        // Валидация email
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Валидация формы
+        function validateForm() {
+            let isValid = true;
+
+            // Валидация email
+            if (!validateEmail(emailInput.value)) {
+                emailError.style.display = 'block';
+                emailInput.classList.add('error');
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+                emailInput.classList.remove('error');
+            }
+
+            // Валидация пароля
+            if (passwordInput.value.length < 6) {
+                passwordError.style.display = 'block';
+                passwordInput.classList.add('error');
+                isValid = false;
+            } else {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('error');
+            }
+
+            return isValid;
+        }
+
+        // Имитация API запроса для авторизации
+        async function loginAPI(email, password) {
+            // В реальном приложении здесь был бы fetch к вашему бэкенду
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // Демо логика - проверяем демо учетные данные
+                    if (email === 'demo@example.com' && password === '123456') {
+                        resolve({
+                            success: true,
+                            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+                                   'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkRlbW8gVXNlciIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxNzEyNjU1NjIyLCJlbWFpbCI6ImRlbW9AZXhhbXBsZS5jb20ifQ.' +
+                                   'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+                            user: {
+                                id: 1,
+                                email: email,
+                                name: 'Demo User'
+                            }
+                        });
+                    } else {
+                        reject(new Error('Неверный email или пароль'));
+                    }
+                }, 1500); // Имитация задержки сети
+            });
+        }
+
+        // Сохранение токена и данных пользователя
+        function saveAuthData(token, user) {
+            localStorage.setItem(TOKEN_KEY, token);
+            localStorage.setItem(USER_KEY, JSON.stringify(user));
+        }
+
+        // Получение токена
+        function getToken() {
+            return localStorage.getItem(TOKEN_KEY);
+        }
+
+        // Получение данных пользователя
+        function getUser() {
+            const userData = localStorage.getItem(USER_KEY);
+            return userData ? JSON.parse(userData) : null;
+        }
+
+        // Проверка валидности токена (упрощенная версия)
+        function isTokenValid(token) {
+            if (!token) return false;
+            
+            try {
+                // В реальном приложении здесь была бы проверка срока действия токена
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const currentTime = Math.floor(Date.now() / 1000);
+                
+                // Проверяем expiration time
+                if (payload.exp && payload.exp < currentTime) {
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // Очистка данных авторизации
+        function clearAuthData() {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(USER_KEY);
+        }
+
+        // Выход из системы
+        function logout() {
+            clearAuthData();
+            showLoginPage();
+            showMessage('Вы успешно вышли из системы', 'success');
+        }
+
+        // Показать страницу логина
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            dashboardPage.classList.add('hidden');
+            loginForm.reset();
+        }
+
+        // Показать dashboard
+        function showDashboard() {
+            loginPage.classList.add('hidden');
+            dashboardPage.classList.remove('hidden');
+            
+            const user = getUser();
+            if (user) {
+                userEmail.textContent = `Email: ${user.email}`;
+            }
+            
+            const token = getToken();
+            if (token) {
+                tokenInfo.textContent = `Токен: ${token.substring(0, 20)}...`;
+            }
+        }
+
+        // Показать сообщение
+        function showMessage(message, type = 'error') {
+            if (type === 'success') {
+                loginError.style.display = 'none';
+                // Можно добавить отображение успешных сообщений
+            } else {
+                loginError.textContent = message;
+                loginError.style.display = 'block';
+                loginError.classList.add('error-message-general');
+            }
+        }
+
+        // Проверка авторизации при загрузке страницы
+        function checkAuth() {
+            const token = getToken();
+            
+            if (token && isTokenValid(token)) {
+                showDashboard();
+            } else {
+                clearAuthData();
+                showLoginPage();
+            }
+        }
+
+        // Обработчик отправки формы
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+
+            // Показываем состояние загрузки
+            loginBtn.disabled = true;
+            loading.classList.remove('hidden');
+            loginError.style.display = 'none';
+
+            try {
+                const email = emailInput.value;
+                const password = passwordInput.value;
+
+                const response = await loginAPI(email, password);
+                
+                if (response.success) {
+                    saveAuthData(response.token, response.user);
+                    showDashboard();
+                    showMessage('Успешный вход!', 'success');
+                }
+            } catch (error) {
+                showMessage(error.message);
+            } finally {
+                loginBtn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        });
+
+        // Реальная функция для работы с API (раскомментировать для использования с реальным бэкендом)
+        /*
+        async function realLoginAPI(email, password) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка авторизации');
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw new Error('Ошибка сети: ' + error.message);
+            }
+        }
+        */
+
+        // Защита маршрутов - перенаправление если не авторизован
+        function requireAuth() {
+            const token = getToken();
+            if (!token || !isTokenValid(token)) {
+                clearAuthData();
+                showLoginPage();
+                return false;
+            }
+            return true;
+        }
+
+        // Интерцептор для API запросов (добавляет токен к запросам)
+        function authFetch(url, options = {}) {
+            const token = getToken();
+            
+            if (!token) {
+                throw new Error('Токен не найден');
+            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                ...options.headers
+            };
+
+            return fetch(url, {
+                ...options,
+                headers
+            }).then(response => {
+                if (response.status === 401) {
+                    // Токен истек или недействителен
+                    clearAuthData();
+                    showLoginPage();
+                    throw new Error('Сессия истекла');
+                }
+                return response;
+            });
+        }
+
+        // Пример использования защищенного API вызова
+        async function fetchProtectedData() {
+            if (!requireAuth()) return;
+
+            try {
+                const response = await authFetch(`${API_BASE_URL}/protected-route`);
+                const data = await response.json();
+                console.log('Защищенные данные:', data);
+            } catch (error) {
+                console.error('Ошибка получения данных:', error);
+                showMessage('Ошибка получения данных');
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            
+            // Проверяем авторизацию каждые 30 секунд
+            setInterval(() => {
+                if (!requireAuth()) {
+                    showMessage('Сессия истекла. Пожалуйста, войдите снова.');
+                }
+            }, 30000);
+        });
+
+        // Real-time валидация
+        emailInput.addEventListener('input', () => {
+            if (validateEmail(emailInput.value)) {
+                emailError.style.display = 'none';
+                emailInput.classList.remove('error');
+            }
+        });
+
+        passwordInput.addEventListener('input', () => {
+            if (passwordInput.value.length >= 6) {
+                passwordError.style.display = 'none';
+                passwordInput.classList.remove('error');
+            }
+        });
+    </script>
+</body>
+</html>

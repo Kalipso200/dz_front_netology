@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приложение с индикаторами статуса</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Шапка приложения -->
+    <header class="header">
+        <div class="header__container">
+            <div class="header__brand">
+                <h1>🚀 Мое Приложение</h1>
+            </div>
+            
+            <div class="header__status">
+                <!-- Индикатор сети -->
+                <div class="status-indicator" id="network-status">
+                    <span class="status-indicator__icon">🌐</span>
+                    <span class="status-indicator__text">Онлайн</span>
+                </div>
+                
+                <!-- Индикатор авторизации -->
+                <div class="auth-indicator" id="auth-indicator">
+                    <div class="auth-indicator__guest" id="guest-indicator">
+                        <button class="btn btn--secondary btn--small" onclick="showLogin()">
+                            🔑 Войти
+                        </button>
+                    </div>
+                    <div class="auth-indicator__user hidden" id="user-indicator">
+                        <div class="user-info">
+                            <span class="user-info__avatar">👤</span>
+                            <span class="user-info__name" id="user-name"></span>
+                        </div>
+                        <div class="user-menu">
+                            <button class="btn btn--secondary btn--small" onclick="logout()">
+                                🚪 Выйти
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Уведомления -->
+    <div class="notifications" id="notifications"></div>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            <!-- Страница контента -->
+            <div class="content-page" id="content-page">
+                <section class="welcome-section">
+                    <h2>Добро пожаловать!</h2>
+                    <p>Это демонстрация приложения с индикаторами статуса авторизации и подключения.</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-card__icon">🔐</div>
+                            <h3>Авторизация</h3>
+                            <p>Реализована система входа с JWT токенами и индикацией статуса</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-card__icon">🌐</div>
+                            <h3>Онлайн статус</h3>
+                            <p>Индикатор сети показывает текущее состояние подключения</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-card__icon">📱</div>
+                            <h3>Уведомления</h3>
+                            <p>Система уведомлений для важных событий приложения</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="demo-section">
+                    <h3>Демонстрация функционала</h3>
+                    <div class="demo-controls">
+                        <button class="btn" onclick="simulateNetworkChange()">
+                            🔄 Имитация смены сети
+                        </button>
+                        <button class="btn btn--secondary" onclick="checkAuthStatus()">
+                            🔍 Проверить статус авторизации
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Страница авторизации -->
+            <div class="login-page hidden" id="login-page">
+                <div class="login-form">
+                    <h2>🔐 Вход в систему</h2>
+                    
+                    <div class="demo-credentials">
+                        <strong>Демо доступ:</strong><br>
+                        Email: <code>demo@example.com</code><br>
+                        Пароль: <code>123456</code>
+                    </div>
+
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="email">Электронная почта:</label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message" id="email-error">Введите корректный email адрес</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Пароль:</label>
+                            <input type="password" id="password" name="password" required minlength="6">
+                            <div class="error-message" id="password-error">Пароль должен содержать не менее 6 символов</div>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary" id="login-btn">Войти</button>
+                    </form>
+
+                    <div class="loading hidden" id="loading">Выполняется вход...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Статус-бар внизу экрана -->
+    <footer class="status-bar">
+        <div class="status-bar__container">
+            <div class="status-bar__item">
+                <span class="status-bar__label">Статус:</span>
+                <span class="status-bar__value" id="global-status">Готов к работе</span>
+            </div>
+            <div class="status-bar__item">
+                <span class="status-bar__label">Время:</span>
+                <span class="status-bar__value" id="current-time"></span>
+            </div>
+            <div class="status-bar__item">
+                <span class="status-bar__label">Версия:</span>
+                <span class="status-bar__value">1.0.0</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
